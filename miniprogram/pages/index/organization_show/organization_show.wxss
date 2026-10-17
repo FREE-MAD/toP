@@ -1,0 +1,224 @@
+/* 机构展示页样式（2026-10-14 UI 升级）：统一活力蓝 + 阳光橙体系 */
+.page {
+  padding: 28rpx;
+  background: #F0F4F8;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+}
+
+/* 品牌区 */
+.brand-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff 0%, #EFF6FF 100%);
+  border-radius: 24rpx;
+  padding: 32rpx 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+}
+
+.brand-logo {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #EFF6FF;
+}
+
+.brand-logo-placeholder {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+
+.brand-main {
+  margin-left: 24rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.brand-name-row {
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1A202C;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.brand-tag {
+  margin-left: 16rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: #EBF2FF;
+  color: #2563EB;
+  font-size: 22rpx;
+  flex-shrink: 0;
+}
+
+.brand-slogan {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #4A5568;
+  line-height: 1.6;
+}
+
+/* 品牌轮播图 */
+.swiper-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.brand-swiper {
+  width: 100%;
+  height: 360rpx;
+}
+
+.brand-swiper-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.brand-swiper-empty {
+  min-height: 360rpx;
+  padding: 40rpx 32rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+  text-align: center;
+}
+
+.brand-swiper-empty-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A202C;
+}
+
+.brand-swiper-empty-desc {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #94A3B8;
+}
+
+/* 基本信息 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1A202C;
+  margin-bottom: 8rpx;
+}
+
+.info-row {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #E2E8F0;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  width: 140rpx;
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #94A3B8;
+}
+
+.info-value {
+  flex: 1;
+  font-size: 26rpx;
+  color: #1A202C;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 教练信息 */
+.coach-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12rpx;
+}
+
+.coach-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #E2E8F0;
+}
+
+.coach-item:last-child {
+  border-bottom: none;
+}
+
+.coach-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: #EFF6FF;
+  flex-shrink: 0;
+}
+
+.coach-avatar-placeholder {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+
+.coach-main {
+  margin-left: 24rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.coach-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1A202C;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.coach-role {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #94A3B8;
+}
+
+/* 通用卡片元素 */
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.desc {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  color: #4A5568;
+  line-height: 1.8;
+}
+
+.primary-btn {
+  margin-top: 20rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 600;
+  box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
+}

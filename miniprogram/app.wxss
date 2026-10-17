@@ -1,0 +1,79 @@
+/**app.wxss**/
+@import "./styles/icons.wxss";
+/* 全局配色体系（2026-10-14 UI 升级）：
+   主色：活力蓝 #3B82F6 → #2563EB
+   强调色：阳光橙 #F97316
+   成功：#10B981 / 警告：#F59E0B / 危险：#EF4444
+   背景：#F0F4F8 / 卡片：#FFFFFF
+   标题：#1A202C / 正文：#4A5568 / 次要：#A0AEC0 / 边框：#E2E8F0 */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+} 
+
+button {
+  background: initial;
+}
+
+button:focus{
+  outline: 0;
+}
+
+button::after{
+  border: none;
+}
+
+page {
+  background: #F0F4F8;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+/* 全局通用按钮：主按钮（活力蓝渐变） */
+.primary-btn {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
+}
+
+/* 全局通用按钮：次按钮（浅蓝底蓝字） */
+.secondary-btn {
+  background: #EBF2FF;
+  color: #2563EB;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+/* 全局通用卡片：白底圆角 + 柔和阴影 */
+.card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+}
+
+/* 全局状态徽章配色（统一替换各页面的 status-xxx） */
+.status-badge {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+.status-gray { background: #94A3B8; }
+.status-orange { background: #F59E0B; }
+.status-green { background: #10B981; }
+.status-darkgreen { background: #047857; }
+.status-red { background: #EF4444; }
+.status-darkgray { background: #475569; }
+.status-blue { background: #3B82F6; }

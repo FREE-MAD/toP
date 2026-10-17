@@ -1,0 +1,14 @@
+{
+  "name": "DLforP_entry_qrcode",
+  "version": "1.0.0",
+  "description": "B 侧入口二维码云函数：生成属于小程序 B 的小程序码（scene 携带 entryId），供 A 侧通过 HTTP 调用，扫码后由 B 的 entry_landing 页解析",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"no test\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "^4.0.2"
+  }
+}

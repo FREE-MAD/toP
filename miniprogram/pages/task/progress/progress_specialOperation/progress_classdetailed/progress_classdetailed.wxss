@@ -1,0 +1,455 @@
+.container {
+  min-height: 100vh;
+  padding: 32rpx;
+  padding-bottom: 120rpx;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #f7f4eb 0%, #eff4ff 56%, #d9e5ff 100%);
+}
+
+/* 新增头部概览卡片：强化详情页第一屏的信息层次 */
+.hero-card {
+  padding: 12rpx 0 28rpx;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-back-placeholder,
+.hero-eye {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.hero-back-placeholder {
+  background: transparent;
+}
+
+.hero-eye {
+  background: rgba(255, 255, 255, 0.72);
+  border: 2rpx solid rgba(52, 68, 102, 0.12);
+  color: #3d4a63;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.hero-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #202430;
+  line-height: 1.3;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 28rpx;
+  padding: 32rpx;
+  box-sizing: border-box;
+  box-shadow: 0 16rpx 40rpx rgba(70, 92, 140, 0.08);
+}
+
+.basic-card,
+.coach-card {
+  margin-bottom: 24rpx;
+}
+
+.basic-card {
+  /* 调整为与下方教练评价卡同宽，避免上下卡片宽度不一致 */
+  width: 100%;
+  max-width: 100%;
+  margin-top: 24rpx;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24rpx 28rpx;
+  border: 2rpx solid rgba(215, 228, 255, 0.9);
+  border-top: 114rpx solid #d7e4ff;
+  border-radius: 32rpx;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 18rpx 46rpx rgba(111, 135, 196, 0.12);
+  overflow: hidden;
+}
+
+.coach-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.coach-card-head {
+  align-items: flex-start;
+}
+
+.card-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1f2430;
+}
+
+.card-subtitle {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #7f8696;
+}
+
+.status-pill {
+  min-width: 112rpx;
+  height: 56rpx;
+  padding: 0 20rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.status-pill.pending {
+  background: #f8ead0;
+  color: #b27c1d;
+}
+
+.status-pill.filled {
+  background: #e8f4e5;
+  color: #3a8d3c;
+}
+
+.student-row,
+.coach-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.student-avatar,
+.coach-avatar,
+.coach-avatar-fallback {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.student-avatar,
+.coach-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #d9dde8 0%, #f0f2f7 100%);
+  color: #3f4656;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.student-info,
+.coach-info {
+  flex: 1;
+  min-width: 0;
+  margin-left: 20rpx;
+}
+
+.basic-card .student-avatar {
+  width: 84rpx;
+  height: 84rpx;
+  font-size: 30rpx;
+}
+
+.basic-card .student-info {
+  margin-left: 16rpx;
+}
+
+.student-line {
+  display: block;
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #384152;
+  word-break: break-all;
+}
+
+.basic-card .student-line {
+  font-size: 25rpx;
+  line-height: 1.6;
+}
+
+.basic-grid {
+  margin-top: 28rpx;
+  border-top: 2rpx solid #edf0f5;
+}
+
+.basic-card .basic-grid {
+  margin-top: 20rpx;
+}
+
+.basic-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+  min-height: 96rpx;
+  border-bottom: 2rpx solid #edf0f5;
+}
+
+.basic-card .basic-cell {
+  gap: 12rpx;
+  min-height: 78rpx;
+}
+
+.basic-label {
+  font-size: 28rpx;
+  color: #404756;
+}
+
+.basic-card .basic-label,
+.basic-card .basic-value {
+  font-size: 25rpx;
+}
+
+.basic-value {
+  font-size: 28rpx;
+  color: #404756;
+  font-weight: 600;
+  text-align: right;
+}
+
+.basic-card .card-head {
+  margin-bottom: 18rpx;
+}
+
+.basic-card .card-title {
+  font-size: 30rpx;
+}
+
+.basic-card .status-pill {
+  min-width: 96rpx;
+  height: 48rpx;
+  padding: 0 16rpx;
+  font-size: 22rpx;
+}
+
+.basic-value.highlight {
+  color: #3c67d6;
+}
+
+.coach-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #232b39;
+}
+
+.coach-role {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: #7f8696;
+}
+
+.coach-rating-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 2rpx;
+}
+
+.rating-star {
+  font-size: 28rpx;
+  color: #d9dce3;
+  line-height: 1;
+}
+
+.rating-star.active {
+  color: #f0af3a;
+}
+
+.rating-number {
+  margin-top: 8rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #4c5566;
+}
+
+.coach-summary {
+  margin-top: 28rpx;
+  padding: 8rpx 0 0;
+}
+
+.coach-summary.is-filled {
+  color: #394152;
+}
+
+.coach-summary.is-empty {
+  padding-top: 0;
+}
+
+.coach-summary-text {
+  font-size: 30rpx;
+  line-height: 1.75;
+  color: #394152;
+  white-space: pre-wrap;
+}
+
+.coach-score-section {
+  width: 100%;
+  margin-top: 24rpx;
+  padding: 24rpx;
+  border-radius: 22rpx;
+  background: #f8fbff;
+  border: 2rpx solid #e0e9ff;
+  box-sizing: border-box;
+}
+
+.coach-score-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.coach-score-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #232b39;
+}
+
+.coach-score-tip {
+  font-size: 22rpx;
+  color: #8691a6;
+}
+
+.coach-score-result {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.coach-score-result-item {
+  flex: 1;
+  min-width: 0;
+  padding: 20rpx;
+  border-radius: 18rpx;
+  background: #fff;
+  border: 2rpx solid #e8eef8;
+  box-sizing: border-box;
+}
+
+.coach-score-result-label {
+  display: block;
+  font-size: 22rpx;
+  color: #8b94a6;
+}
+
+.coach-score-result-value {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #365fd1;
+  word-break: break-all;
+}
+
+.coach-dimension-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 24rpx;
+  width: 100%;
+}
+
+.coach-dimension-item {
+  width: 100%;
+  padding: 18rpx 22rpx;
+  border-radius: 18rpx;
+  background: #fff;
+  border: 2rpx solid #e8eef8;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.coach-dimension-label {
+  font-size: 26rpx;
+  color: #4d5b76;
+}
+
+.coach-dimension-value {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #365fd1;
+}
+
+.coach-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18rpx;
+  margin-top: 28rpx;
+}
+
+.coach-tag {
+  min-height: 64rpx;
+  padding: 0 28rpx;
+  border-radius: 999rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: #f1f4f9;
+  color: #536078;
+  font-size: 28rpx;
+}
+
+.summary-footer {
+  margin-top: 28rpx;
+  padding-top: 22rpx;
+  border-top: 2rpx solid #edf0f5;
+}
+
+.summary-footer-text {
+  font-size: 24rpx;
+  color: #8a91a1;
+  line-height: 1.6;
+}
+
+.empty-hint {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #95a0b0;
+  text-align: center;
+  line-height: 1.8;
+  padding: 56rpx 32rpx;
+  background: #f8fafc;
+  border-radius: 20rpx;
+  border: 2rpx dashed #dbe3ef;
+}
+
+.coach-score-empty {
+  margin-top: 20rpx;
+  background: #fff;
+}

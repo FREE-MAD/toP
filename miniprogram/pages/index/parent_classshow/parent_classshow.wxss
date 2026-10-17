@@ -1,0 +1,296 @@
+/* 上课信息页配色（2026-10-14 UI 升级）：统一活力蓝 + 阳光橙体系 */
+.page {
+  padding: 28rpx;
+  background: #F0F4F8;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.highlight {
+  margin-top: 14rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.desc {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  color: #4A5568;
+  line-height: 1.8;
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 14rpx;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: #EBF2FF;
+  color: #2563EB;
+  font-size: 24rpx;
+}
+
+.primary-btn,
+.secondary-btn {
+  margin-top: 20rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
+}
+
+.secondary-btn {
+  background: #EBF2FF;
+  color: #2563EB;
+}
+
+/* 家长课程码（点击复制） */
+.course-code-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 20rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 18rpx;
+  background: #EFF6FF;
+}
+
+.code-text {
+  color: #2563EB;
+  font-size: 42rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+}
+
+.code-copy-hint {
+  font-size: 22rpx;
+  color: #93C5FD;
+}
+
+/* 7 档状态色徽章 */
+.status-badge {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ffffff;
+  margin-left: 6rpx;
+}
+
+.status-gray { background: #94A3B8; }
+.status-orange { background: #F59E0B; }
+.status-green { background: #10B981; }
+.status-darkgreen { background: #047857; }
+.status-red { background: #EF4444; }
+.status-darkgray { background: #475569; }
+.status-blue { background: #3B82F6; }
+
+/* 课时进度条 */
+.progress-bar {
+  margin-top: 14rpx;
+  width: 100%;
+  height: 16rpx;
+  border-radius: 999rpx;
+  background: #E2E8F0;
+  overflow: hidden;
+  display: block;
+}
+
+.progress-fill {
+  display: block;
+  height: 16rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #3B82F6, #10B981);
+  min-width: 4rpx;
+}
+
+/* 分区标题 */
+.section-title {
+  margin: 12rpx 8rpx 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.course-list-item {
+  padding: 24rpx 28rpx;
+}
+
+.history-item {
+  background: #F8FAFC;
+  opacity: 0.85;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.action-row .secondary-btn,
+.action-row .primary-btn {
+  margin-top: 0;
+  flex: 1;
+  min-width: 200rpx;
+}
+
+/* 页面内 tabbar */
+.inner-tabbar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 8rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
+}
+
+.inner-tab {
+  flex: 1;
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  color: #64748B;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.inner-tab.active {
+  background: linear-gradient(90deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.25);
+}
+
+.inner-tab-label {
+  font-size: 28rpx;
+  max-width: 320rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inner-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 12rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.35);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.inner-tab:not(.active) .inner-tab-count {
+  background: #EBF2FF;
+  color: #2563EB;
+}
+
+/* 查看其他课节提示条 */
+.viewing-other-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  margin-bottom: 24rpx;
+  border-radius: 16rpx;
+  background: #FFF7ED;
+  color: #EA580C;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.banner-link {
+  color: #2563EB;
+  font-weight: 600;
+}
+
+/* 基本信息行 */
+.info-list {
+  margin-top: 20rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F1F5F9;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 26rpx;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 26rpx;
+  color: #1A202C;
+  text-align: right;
+}
+
+.info-row .status-badge {
+  margin-left: 0;
+}
+
+/* 空态卡片 */
+.empty-history-card {
+  margin-top: 8rpx;
+  text-align: center;
+  background: #F8FAFC;
+  border: 2rpx dashed #CBD5E1;
+}
+
+.empty-history-card .title {
+  font-size: 30rpx;
+}
+
+/* 列表项头部 */
+.item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 8rpx;
+}
+
+.item-head .title {
+  flex: 1;
+  word-break: break-all;
+}
+
+.item-head .status-badge {
+  flex-shrink: 0;
+  margin-left: 0;
+}

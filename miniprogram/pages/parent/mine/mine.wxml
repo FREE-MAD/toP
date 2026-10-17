@@ -1,0 +1,65 @@
+<view class="page">
+  <view class="card" wx:if="{{loading}}">
+    <view class="title">正在加载</view>
+    <view class="desc">正在读取家长资料...</view>
+  </view>
+
+  <block wx:else>
+    <!-- 家长资料卡 -->
+    <view class="card profile-card">
+      <view class="profile-head">
+        <view class="profile-avatar">
+          <text class="profile-avatar-text">{{profile.parentName ? profile.parentName.slice(0,1) : '家'}}</text>
+        </view>
+        <view class="profile-info">
+          <view class="profile-name">{{profile.parentName || '家长'}}</view>
+          <view class="profile-sub" wx:if="{{profile.latestInviteCode}}">识别码：{{profile.latestInviteCode}}</view>
+          <view class="profile-sub" wx:else>暂未绑定识别码</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 当前课程进度摘要 -->
+    <view class="card" wx:if="{{latestRequest}}">
+      <view class="title"><view class="icon icon-chart icon-md"></view>当前约课</view>
+      <view class="desc" wx:if="{{latestRequest.targetSnapshot}}">绑定对象：{{latestRequest.targetSnapshot.displayName}}</view>
+      <view class="desc">当前状态：{{latestRequest.statusText || '待安排'}}</view>
+      <view class="desc" wx:if="{{latestRequest.parentCourseCode}}">课程码：{{latestRequest.parentCourseCode}}</view>
+      <button class="primary-btn" bindtap="goClassShow">查看上课信息</button>
+    </view>
+
+    <view class="card" wx:else>
+      <view class="title"><view class="icon icon-list icon-md"></view>还没有约课</view>
+      <view class="desc">点击下面按钮，填写家长约课表单。</view>
+      <button class="primary-btn" bindtap="goParentAdd">去填写约课表单</button>
+    </view>
+
+    <!-- 入口集合 -->
+    <view class="card">
+      <view class="title"><view class="icon icon-rocket icon-md"></view>常用入口</view>
+      <view class="entry-list">
+        <view class="entry-item" bindtap="goParentAdd">
+          <view class="entry-left">
+            <view class="icon icon-edit icon-lg"></view>
+            <text class="entry-text">填写约课表单</text>
+          </view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry-item" bindtap="goClassShow">
+          <view class="entry-left">
+            <view class="icon icon-book icon-lg"></view>
+            <text class="entry-text">上课信息</text>
+          </view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry-item" bindtap="contactSupport">
+          <view class="entry-left">
+            <view class="icon icon-chat icon-lg"></view>
+            <text class="entry-text">联系客服 / 教练</text>
+          </view>
+          <text class="entry-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

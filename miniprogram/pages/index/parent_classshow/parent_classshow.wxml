@@ -1,0 +1,188 @@
+<view class="page">
+  <view class="card" wx:if="{{loading}}">
+    <view class="title">正在加载</view>
+    <view class="desc">正在读取孩子上课信息...</view>
+  </view>
+
+  <block wx:elif="{{!latestRequest && !allCourses.length}}">
+    <view class="card">
+      <view class="title">还没有上课信息</view>
+      <view class="desc">你还没有提交约课表单，先去填写家长约课页面。</view>
+      <button class="primary-btn" bindtap="goParentAdd">去填写约课表单</button>
+    </view>
+  </block>
+
+  <block wx:else>
+    <!-- 页面内部 tabbar：A 历史记录 / B 当前课程（与 parent_add 同款切换体验） -->
+    <view class="inner-tabbar">
+      <view
+        class="inner-tab {{activeTab === 'history' ? 'active' : ''}}"
+        data-tab="history"
+        bindtap="switchTab"
+      >
+        <view class="inner-tab-label"><view class="icon icon-history icon-sm"></view>历史记录</view>
+        <text class="inner-tab-count" wx:if="{{historyTotalCount > 0}}">{{historyTotalCount}}</text>
+      </view>
+      <view
+        class="inner-tab {{activeTab === 'current' ? 'active' : ''}}"
+        data-tab="current"
+        bindtap="switchTab"
+      >
+        <view class="inner-tab-label"><view class="icon icon-book icon-sm"></view>{{currentTabLabel}}</view>
+      </view>
+    </view>
+
+    <!-- ========== A tabbar：历史记录（全部课程，含当前最新一条） ========== -->
+    <!-- 设计逻辑与 parent_add 的 A「历史预约」对齐：
+         列表 = 家长名下全部约课记录（活跃 + 已结束 + 最新一条），
+         点击某条「查看此课节」→ 切到 B「当前课程」展示对应信息，所有操作（修改/课节详情）在 B 中进行。 -->
+    <block wx:if="{{activeTab === 'history'}}">
+      <view class="card">
+        <view class="title">历史记录</view>
+        <view class="desc">这里是您提交过的全部约课记录（包含当前最新课程）。点击任意一条课节，切到「当前课程」查看对应信息。</view>
+      </view>
+
+      <!-- 进行中：非终态课程（含最新一条） -->
+      <view class="section-title" wx:if="{{otherActive.length > 0}}"><view class="icon icon-refresh icon-sm"></view>进行中的课节（{{otherActive.length}}）</view>
+      <block wx:for="{{otherActive}}" wx:key="courseId">
+        <view class="card course-list-item">
+          <view class="item-head">
+            <view class="title">{{item.targetSnapshot.displayName || item.inviteCode || '未命名课程'}}</view>
+            <view class="status-badge status-{{item.statusClass}}">{{item.statusText || '待安排'}}</view>
+          </view>
+          <view class="desc">识别码：{{item.inviteCode || '未填写'}}</view>
+          <view class="desc">孩子姓名：{{item.formSnapshot.childName || '未填写'}}</view>
+          <view class="desc" wx:if="{{item.formSnapshot.location}}">上课地点：{{item.formSnapshot.location}}</view>
+          <view class="desc" wx:if="{{item.progressTotal}}">课时进度：{{item.progressDone || 0}} / {{item.progressTotal}}</view>
+          <view class="desc" wx:if="{{item.parentCourseCode}}">课程码：{{item.parentCourseCode}}</view>
+          <view class="desc" wx:if="{{item.updatedAtText}}">更新于 {{item.updatedAtText}}</view>
+          <view class="action-row">
+            <button class="primary-btn" data-course-id="{{item.courseId}}" bindtap="onSelectHistory">查看此课节</button>
+            <button class="secondary-btn" data-course-id="{{item.courseId}}" bindtap="goParentModify">修改</button>
+          </view>
+        </view>
+      </block>
+
+      <!-- 已结束：终态课程（completed / cancelled / closed / finished） -->
+      <view class="section-title" wx:if="{{otherTerminal.length > 0}}"><view class="icon icon-check icon-sm"></view>已结束的课节（{{otherTerminal.length}}）</view>
+      <block wx:for="{{otherTerminal}}" wx:key="courseId">
+        <view class="card course-list-item history-item">
+          <view class="item-head">
+            <view class="title">{{item.targetSnapshot.displayName || item.inviteCode || '未命名课程'}}</view>
+            <view class="status-badge status-{{item.statusClass}}">{{item.statusText || '已结束'}}</view>
+          </view>
+          <view class="desc">识别码：{{item.inviteCode || '未填写'}}</view>
+          <view class="desc">孩子姓名：{{item.formSnapshot.childName || '未填写'}}</view>
+          <view class="desc" wx:if="{{item.closeSummary}}">结课摘要：{{item.closeSummary}}</view>
+          <view class="desc" wx:if="{{item.progressTotal}}">课时进度：{{item.progressDone || 0}} / {{item.progressTotal}}</view>
+          <view class="desc" wx:if="{{item.updatedAtText}}">更新于 {{item.updatedAtText}}</view>
+          <view class="action-row">
+            <button class="primary-btn" data-course-id="{{item.courseId}}" bindtap="onSelectHistory">查看此课节</button>
+          </view>
+        </view>
+      </block>
+
+      <!-- A tab 空状态：全量数据下没有任何课程记录时才出现 -->
+      <view class="card empty-history-card" wx:if="{{historyTotalCount === 0}}">
+        <view class="title">暂无约课记录</view>
+        <view class="desc">您还没有提交过约课表单，先去填写一条吧。</view>
+      </view>
+    </block>
+
+    <!-- ========== B tabbar：当前课程（默认展示 currentCourse，可通过 A 切换选中项） ========== -->
+    <block wx:if="{{activeTab === 'current'}}">
+      <!-- B 没有可显示的课程时，给出空态 -->
+      <view class="card" wx:if="{{!currentCourse}}">
+        <view class="title">还没有可查看的课程</view>
+        <view class="desc">请到 A「历史记录」选择一条课节，或回到约课页填写新表单。</view>
+        <button class="primary-btn" bindtap="goParentAdd">去填写约课表单</button>
+      </view>
+
+      <block wx:else>
+        <!-- 查看其他课节时的提示条：一键切回最新课程 -->
+        <view class="viewing-other-banner" wx:if="{{!isShowingLatest && latestRequest}}">
+          <text>正在查看其他课节</text>
+          <text class="banner-link" data-course-id="{{latestRequest.courseId}}" bindtap="onSelectHistory">切回最新课程</text>
+        </view>
+
+        <!-- 块1：基本信息（绑定对象 + 排课进度 + 课程码） -->
+        <view class="card">
+          <view class="title"><view class="icon icon-target icon-md"></view>基本信息</view>
+
+          <block wx:if="{{currentCourse.targetSnapshot}}">
+            <view class="highlight">{{currentCourse.targetSnapshot.displayName}}</view>
+            <view class="tag">{{currentCourse.targetSnapshot.targetType === 'org' ? '机构模式' : '自由教练模式'}}</view>
+            <view class="desc" wx:if="{{currentCourse.targetSnapshot.description}}">{{currentCourse.targetSnapshot.description}}</view>
+          </block>
+
+          <view class="info-list">
+            <view class="info-row">
+              <text class="info-label">当前状态</text>
+              <text class="status-badge status-{{statusClass}}">{{currentCourse.statusText || '待安排'}}</text>
+            </view>
+            <view class="info-row">
+              <text class="info-label">孩子姓名</text>
+              <text class="info-value">{{currentCourse.formSnapshot.childName || '未填写'}}</text>
+            </view>
+            <view class="info-row">
+              <text class="info-label">家长姓名</text>
+              <text class="info-value">{{currentCourse.formSnapshot.parentName || '未填写'}}</text>
+            </view>
+            <view class="info-row">
+              <text class="info-label">联系电话</text>
+              <text class="info-value">{{currentCourse.formSnapshot.phone || '未填写'}}</text>
+            </view>
+            <view class="info-row" wx:if="{{currentCourse.progressTotal}}">
+              <text class="info-label">课时进度</text>
+              <text class="info-value">{{currentCourse.progressDone || 0}} / {{currentCourse.progressTotal}}</text>
+            </view>
+          </view>
+
+          <view class="progress-bar" wx:if="{{currentCourse.progressTotal}}">
+            <view class="progress-fill" style="width: {{currentCourse.progressTotal ? (currentCourse.progressDone / currentCourse.progressTotal * 100) : 0}}%"></view>
+          </view>
+
+          <view class="course-code-box" wx:if="{{currentCourse.parentCourseCode}}" data-code="{{currentCourse.parentCourseCode}}" bindtap="copyParentCourseCode">
+            <text class="code-text">{{currentCourse.parentCourseCode}}</text>
+            <text class="code-copy-hint">点击复制课程码</text>
+          </view>
+
+          <button class="secondary-btn" wx:if="{{isShowingLatest}}" bindtap="goParentModify">修改约课信息</button>
+          <button class="secondary-btn" wx:else data-course-id="{{currentCourse.courseId}}" bindtap="goParentModify">修改此课节</button>
+        </view>
+
+        <!-- 块2：查看课程（课节列表 / 每日总结入口 + 状态摘要） -->
+        <view class="card">
+          <view class="title"><view class="icon icon-book icon-md"></view>查看课程</view>
+
+          <block wx:if="{{currentCourse.status === 'in_progress' || currentCourse.status === 'completed'}}">
+            <view class="desc" wx:if="{{currentCourse.formSnapshot.location}}">上课地点：{{currentCourse.formSnapshot.location}}</view>
+            <view class="desc" wx:if="{{currentCourse.scheduleStats}}">排课次数：{{currentCourse.scheduleStats.total_schedule_count || 0}} · 已上课节：{{currentCourse.scheduleStats.recorded_lesson_count || 0}}</view>
+            <view class="desc" wx:if="{{currentCourse.latestLesson}}">最近课节：{{currentCourse.latestLesson.startedAt || ''}}</view>
+            <view class="desc" wx:if="{{currentCourse.status === 'completed' && currentCourse.closeSummary}}">结课摘要：{{currentCourse.closeSummary}}</view>
+            <view class="desc" wx:if="{{currentCourse.status === 'completed' && currentCourse.closeCoachNote}}">教练备注：{{currentCourse.closeCoachNote}}</view>
+          </block>
+
+          <block wx:elif="{{currentCourse.status === 'closed'}}">
+            <view class="desc" wx:if="{{currentCourse.closeSummary}}">结课摘要：{{currentCourse.closeSummary}}</view>
+            <view class="desc" wx:if="{{currentCourse.closeCoachNote}}">教练备注：{{currentCourse.closeCoachNote}}</view>
+            <view class="desc" wx:if="{{currentCourse.scheduleStats}}">总排课：{{currentCourse.scheduleStats.total_schedule_count || 0}} · 已上：{{currentCourse.scheduleStats.recorded_lesson_count || 0}}</view>
+          </block>
+
+          <block wx:elif="{{currentCourse.status === 'cancelled'}}">
+            <view class="desc" wx:if="{{currentCourse.cancelReason}}">取消原因：{{currentCourse.cancelReason}}</view>
+          </block>
+
+          <block wx:else>
+            <view class="desc" wx:if="{{currentCourse.status === 'editing'}}">课程信息待教练编辑，稍后刷新查看。</view>
+            <view class="desc" wx:elif="{{currentCourse.status === 'awaiting'}}">课程已确认，等待教练接取，稍后刷新查看。</view>
+            <view class="desc" wx:else>教练端还没完成排课，稍后重新进入此页即可查看最新结果。</view>
+          </block>
+
+          <button class="primary-btn" wx:if="{{currentCourse.courseId}}" data-course-id="{{currentCourse.courseId}}" bindtap="goCourseDetailById">查看课节详情</button>
+          <button class="secondary-btn" bindtap="loadData">刷新上课信息</button>
+        </view>
+      </block>
+    </block>
+  </block>
+</view>

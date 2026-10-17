@@ -1,0 +1,14 @@
+{
+  "name": "twowaybinding_1_DLforP",
+  "version": "1.0.0",
+  "description": "B 侧中转云函数：后续用于转发到 A 的 HTTP 云函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"no test\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "^4.0.2"
+  }
+}

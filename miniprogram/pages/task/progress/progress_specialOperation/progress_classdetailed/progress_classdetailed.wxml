@@ -1,0 +1,129 @@
+<view class="container">
+  <view class="card basic-card">
+    <view class="card-head">
+      <text class="card-title">基本信息</text>
+      <view class="status-pill {{lesson.summary ? 'filled' : 'pending'}}">{{lesson.summary ? '已填写' : '未填写'}}</view>
+    </view>
+
+    <view class="student-row">
+      <view class="student-avatar">{{lesson.childInitial || '学'}}</view>
+      <view class="student-info">
+        <text class="student-line">学员姓名：{{lesson.childName || '未填写'}}</text>
+        <text class="student-line" wx:if="{{lesson.childCount > 1}}">本课程共 {{lesson.childCount}} 个孩子</text>
+        <text class="student-line">课程名称：{{lesson.courseName || '未填写'}}</text>
+      </view>
+    </view>
+
+    <view class="basic-grid">
+      <view class="basic-cell">
+        <text class="basic-label">训练时间：</text>
+        <text class="basic-value">{{lesson.lessonDateTimeText || '未记录'}}</text>
+      </view>
+      <view class="basic-cell">
+        <text class="basic-label">记录日期：</text>
+        <text class="basic-value">{{lesson.recordDateText || '未记录'}}</text>
+      </view>
+      <view class="basic-cell">
+        <text class="basic-label">训练时长：</text>
+        <text class="basic-value highlight">{{lesson.durationText || '未记录'}}</text>
+      </view>
+      <view class="basic-cell">
+        <text class="basic-label">完成状态：</text>
+        <text class="basic-value highlight">{{lesson.completeStatusText || '未填写'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增页面头图卡片：把课节信息挪到基础信息后面，弱化首屏占位 -->
+  <view class="hero-card">
+    <view class="hero-top">
+      <view class="hero-back-placeholder"></view>
+      <text class="hero-title">第{{displayIndex || lessonNo || 1}}节课课程总结</text>
+      <view class="hero-eye">O</view>
+    </view>
+  </view>
+
+  <!-- 旧状态行逻辑保留注释，不删除；当前详情页已改成训练评价展示 -->
+  <!--
+  <view class="info-row">
+    <text class="label">当前状态</text>
+    <text class="value">{{lesson.statusText || lesson.status}}</text>
+  </view>
+  -->
+  <view class="card coach-card">
+    <view class="card-head coach-card-head">
+      <view>
+        <text class="card-title">教练评价</text>
+        <text class="card-subtitle">本页只负责查看，评分和总结在课程操作台填写</text>
+      </view>
+    </view>
+
+    <view class="coach-row">
+      <image wx:if="{{lesson.coachAvatar}}" class="coach-avatar" src="{{lesson.coachAvatar}}" mode="aspectFill"></image>
+      <view wx:else class="coach-avatar coach-avatar-fallback">{{lesson.coachInitial || '教'}}</view>
+      <view class="coach-info">
+        <text class="coach-name">{{lesson.coachName || '陈教练'}}</text>
+        <text class="coach-role">{{lesson.coachRole || '体能训练师'}}</text>
+      </view>
+      <view class="coach-rating-box">
+        <view class="rating-stars">
+          <text
+            class="rating-star {{item.active ? 'active' : ''}}"
+            wx:for="{{lesson.ratingStars}}"
+            wx:key="index"
+          >★</text>
+        </view>
+        <text class="rating-number">{{lesson.ratingText}}</text>
+      </view>
+    </view>
+
+    <!-- 新增展示页职责说明：上下课和总结填写统一迁移到 publish 教练操作台 -->
+    <view class="coach-summary {{lesson.summary ? 'is-filled' : 'is-empty'}}">
+      <text wx:if="{{lesson.summary}}" class="coach-summary-text">{{lesson.summary}}</text>
+      <text wx:else class="empty-hint">暂未填写教练总结</text>
+    </view>
+
+    <!-- 新增具体评分区：把总分、已评维度和每项评分统一收进一个完整模块 -->
+    <view class="coach-score-section">
+      <view class="coach-score-head">
+        <text class="coach-score-title">具体评分</text>
+        <text class="coach-score-tip">每项按 5 分制展示</text>
+      </view>
+
+      <view class="coach-score-result">
+        <view class="coach-score-result-item" wx:for="{{lesson.ratingSummaryList}}" wx:key="label">
+          <text class="coach-score-result-label">{{item.label}}</text>
+          <text class="coach-score-result-value">{{item.value}}</text>
+        </view>
+      </view>
+
+      <!-- 新增多维评分展示：把专注、动作完成等维度分数直接展示出来 -->
+      <view class="coach-dimension-list" wx:if="{{lesson.dimensionRatingList && lesson.dimensionRatingList.length}}">
+        <view class="coach-dimension-item" wx:for="{{lesson.dimensionRatingList}}" wx:key="label">
+          <text class="coach-dimension-label">{{item.label}}</text>
+          <text class="coach-dimension-value">{{item.value}}分</text>
+        </view>
+      </view>
+
+      <text wx:else class="empty-hint coach-score-empty">暂未填写具体评分</text>
+    </view>
+
+    <!-- 新增训练标签展示：把发布页保存的重点反馈词直接展示出来 -->
+    <view class="coach-tag-list" wx:if="{{lesson.ratingTags && lesson.ratingTags.length}}">
+      <view class="coach-tag" wx:for="{{lesson.ratingTags}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <!-- 旧状态提示逻辑保留注释，不删除；当前页面不再根据课程状态切换提示 -->
+    <!--
+    <view wx:if="{{(!lesson.status || lesson.status === 'PENDING')}}" class="hint-text">等待教练开始上课</view>
+    <view wx:if="{{lesson.status === 'COACH_READY' || lesson.status === 'PARENT_CONFIRMED'}}" class="hint-text running">正在上课中...</view>
+    <view wx:if="{{lesson.status === 'DONE'}}" class="hint-text done">本节课已完成</view>
+    -->
+    <view class="summary-footer" wx:if="{{lesson.summaryUpdatedAtText}}">
+      <text class="summary-footer-text">记录时间：{{lesson.summaryUpdatedAtText}}</text>
+    </view>
+  </view>
+
+  <!-- 旧总结显示条件保留注释，不删除；之前因 lesson.status === 'PENDING' 被拦住，现在改成始终显示 -->
+  <!-- <view class="card summary-card" wx:if="{{lesson.status !== 'PENDING'}}"> -->
+</view>

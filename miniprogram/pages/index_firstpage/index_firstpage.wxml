@@ -1,0 +1,172 @@
+<view class="page">
+  <!-- 新增（2026-10-16 开发调试入口）：页面最顶部的转跳入口，点击进入 B 侧入口二维码落地页 entry_landing。
+       仅开发环境（develop）展示，体验版 / 线上版不会出现，线上用户无感知。 -->
+  <!-- <view class="dev-entry" wx:if="{{isDevEnv}}" bindtap="goEntryLanding">
+    <view class="dev-entry-tag">DEV</view>
+    <view class="dev-entry-text">入口落地页 entry_landing</view>
+    <view class="dev-entry-arrow">→</view>
+  </view> -->
+
+  <view class="hero">
+    <view class="hero-icon"><view class="icon icon-running icon-xl icon-flush"></view></view>
+    <view class="hero-title">家长约课首页</view>
+    <view class="hero-desc">先填写约课表单，再在"上课信息"里查看教练安排结果。</view>
+  </view>
+
+  <view class="card" wx:if="{{loading}}">
+    <view class="title"><view class="icon icon-refresh icon-md"></view>正在加载</view>
+    <view class="desc">正在读取当前家长状态...</view>
+  </view>
+
+  <block wx:else>
+    <view class="entry-card" bindtap="goParentAdd">
+      <view class="entry-title"><view class="icon icon-edit icon-md"></view>家长约课</view>
+      <view class="entry-desc">点击进入表单收集页面，填写孩子约课信息。</view>
+      <view class="entry-action">立即填写 →</view>
+    </view>
+
+    <!-- 新增：第 3 个 view 改为机构展示区，wxml 结构整体抄自 A 侧 pages/organization/organization 的 view.organization_show -->
+    <!-- 新增：整个展示区保留点击跳转机构展示详情页（原 entry-card 的入口行为不丢失） -->
+    <view class="organization_show" bindtap="goOrganizationShow">
+      <!-- 1. 顶部品牌 Hero：训练图片轮播 + 文字遮罩 + 轮播指示器 -->
+      <view class="os-hero">
+        <swiper
+          class="os-hero-swiper"
+          circular="{{brandHeroSlides.length > 1}}"
+          autoplay="{{brandHeroSlides.length > 1}}"
+          interval="4000"
+          duration="500"
+          indicator-dots="{{false}}"
+          bindchange="onBrandHeroChange"
+        >
+          <swiper-item wx:for="{{brandHeroSlides}}" wx:key="index">
+            <image
+              wx:if="{{item.imageUrl}}"
+              class="os-hero-image"
+              src="{{item.imageUrl}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              binderror="onBrandHeroImageError"
+            />
+            <view wx:else class="os-hero-image os-hero-placeholder">
+              <view class="os-hero-placeholder-text">训练现场图片</view>
+            </view>
+          </swiper-item>
+        </swiper>
+
+        <view class="os-hero-mask"></view>
+
+        <!-- 轮播指示器：只有多张图时才展示，指示点随当前页切换 -->
+        <view wx:if="{{brandHeroSlides.length > 1}}" class="os-hero-dots">
+          <block wx:for="{{brandHeroSlides}}" wx:key="index">
+            <view class="os-hero-dot {{brandHeroCurrent === index ? 'os-hero-dot-active' : ''}}"></view>
+          </block>
+        </view>
+
+        <view class="os-hero-text">
+          <view class="os-hero-title">{{organizationProfile.organizationName}}</view>
+          <view class="os-hero-subtitle">{{organizationProfile.slogan}}</view>
+        </view>
+      </view>
+
+      <!-- 2. 机构简介卡：4 行字段（成立时间 / 课程项目 / 招生对象 / 训练理念） -->
+      <!-- 同步（2026-09-05）：与 A 侧 organization_show 保持一致，改为 4 行字段（核心服务 / 服务区域 / 适合谁 / 教练理念），「成立时间」行已移除 -->
+      <view class="os-card os-intro-card">
+        <view class="os-card-head">
+          <view class="os-card-dot"></view>
+          <view class="os-card-title"><view class="icon icon-building icon-sm"></view>机构简介</view>
+          <view class="os-card-dot"></view>
+        </view>
+
+        <block wx:for="{{introInfoList}}" wx:key="label">
+          <view class="os-intro-row">
+            <view class="os-intro-bullet"></view>
+            <view class="os-intro-label">{{item.label}}</view>
+            <view class="os-intro-value">{{item.value}}</view>
+          </view>
+        </block>
+      </view>
+
+      <!-- 3. 团队成员：一人一行一个块；真实成员按加入顺序向下追加（默认兜底 1 人），
+           列表最多同时展示 5 人，超过 5 人时末尾出现「展开全部 / 收起」 -->
+      <view class="os-card os-team-card">
+        <view class="os-card-head">
+          <view class="os-card-dot"></view>
+          <view class="os-card-title"><view class="icon icon-team icon-sm"></view>团队成员</view>
+          <view class="os-card-dot"></view>
+        </view>
+
+        <view class="os-team-grid">
+          <block wx:for="{{teamMembers}}" wx:key="name" wx:for-index="teamIndex">
+            <view wx:if="{{teamShowAll || teamIndex < 5}}" class="os-team-item">
+              <view class="os-team-avatar">
+                <image
+                  wx:if="{{item.avatarUrl}}"
+                  class="os-team-avatar-image"
+                  src="{{item.avatarUrl}}"
+                  mode="aspectFill"
+                />
+                <text wx:else class="os-team-avatar-text">{{item.avatar || item.name}}</text>
+              </view>
+              <view class="os-team-info">
+                <view class="os-team-name">{{item.name}}</view>
+                <view class="os-team-role">{{item.role}}</view>
+              </view>
+            </view>
+          </block>
+
+          <!-- 成员超过 5 人时才出现折叠入口，点击切换全部展开 / 收起 -->
+          <view wx:if="{{teamMembers.length > 5}}" class="os-team-toggle" bindtap="onToggleTeamMembers">
+            <text class="os-team-toggle-text">{{teamShowAll ? '收起' : '展开全部'}}</text>
+            <text class="os-team-toggle-arrow {{teamShowAll ? 'os-team-toggle-arrow-up' : ''}}">▾</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 4. 机构课程：每门课一张卡（图片 + 课程名 + 授课时长 + 详情），
+           真实课程从 dev_forPshowC.courses 生成；未绑定/未推送时退默认示例课程 -->
+      <view class="os-card os-course-card">
+        <view class="os-card-head">
+          <view class="os-card-dot"></view>
+          <view class="os-card-title"><view class="icon icon-book icon-sm"></view>机构课程</view>
+          <view class="os-card-dot"></view>
+        </view>
+
+        <view class="os-course-list">
+          <block wx:for="{{courseList}}" wx:key="name">
+            <view class="os-course-item">
+              <image
+                wx:if="{{item.imageUrl}}"
+                class="os-course-image"
+                src="{{item.imageUrl}}"
+                mode="aspectFill"
+              />
+              <view wx:else class="os-course-image os-course-image-placeholder">
+                <view class="os-course-placeholder-text">课程图片</view>
+              </view>
+              <view class="os-course-info">
+                <view class="os-course-name">{{item.name}}</view>
+                <view class="os-course-price">费用：{{item.price}}</view>
+                <view class="os-course-duration">授课时长：{{item.duration}}</view>
+                <view class="os-course-details">{{item.details}}</view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 阶段5补齐：恢复首页"当前进度"卡片——7 档状态徽章 + 课时进度预览，点击跳上课信息 tab。
+         仅在已提交过约课（有 latestRequest）时展示；未提交时下方 entry-card 已覆盖"去填写"。 -->
+    <!-- <view class="card" wx:if="{{latestRequest}}">
+      <view class="title">当前进度</view>
+      <view class="desc">
+        当前状态：<text class="status-badge status-{{statusClass}}">{{latestRequest.statusText || '待安排'}}</text>
+      </view>
+      <view class="desc" wx:if="{{latestRequest.progressTotal}}">
+        课时进度：{{latestRequest.progressDone || 0}} / {{latestRequest.progressTotal}}
+      </view>
+      <button class="primary-btn" bindtap="goClassShow">去看孩子上课信息</button>
+    </view> -->
+  </block>
+</view>

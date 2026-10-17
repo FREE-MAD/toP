@@ -1,0 +1,836 @@
+/* 约课页配色（2026-10-14 UI 升级）：统一活力蓝 + 阳光橙体系 */
+.page {
+  padding: 28rpx;
+  background: #F0F4F8;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+}
+
+.migrated-card {
+  padding-bottom: 8rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.desc {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  color: #4A5568;
+  line-height: 1.8;
+}
+
+.highlight {
+  margin-top: 14rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 14rpx;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: #EBF2FF;
+  color: #2563EB;
+  font-size: 24rpx;
+}
+
+/* 表单区块卡片 */
+.section-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-top: 24rpx;
+}
+
+.create-group-card {
+  border: 2rpx solid #E2E8F0;
+  box-shadow: none;
+}
+
+.section-card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A202C;
+  margin-bottom: 20rpx;
+}
+
+.group-subtitle {
+  display: block;
+  margin-bottom: 24rpx;
+  font-size: 24rpx;
+  color: #94A3B8;
+  line-height: 1.6;
+}
+
+.form-group {
+  margin-bottom: 32rpx;
+}
+
+.form-group.no-margin {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #1A202C;
+  margin-bottom: 16rpx;
+  font-weight: 600;
+  display: block;
+}
+
+.form-label.required::after {
+  content: '*';
+  color: #EF4444;
+  margin-left: 6rpx;
+}
+
+.form-input-box,
+.form-input {
+  width: 100%;
+  min-height: 96rpx;
+  background: #ffffff;
+  border: 2rpx solid #E2E8F0;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  color: #1A202C;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-input-box {
+  height: auto;
+  padding: 24rpx;
+  line-height: 1.4;
+}
+
+.form-input {
+  height: 96rpx;
+}
+
+.input-placeholder {
+  color: #A0AEC0;
+}
+
+.input-val {
+  color: #1A202C;
+}
+
+.input-icon {
+  color: #A0AEC0;
+  margin-left: 16rpx;
+}
+
+/* 孩子信息卡 */
+.child-profile-card {
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #F8FAFC;
+  border: 1rpx solid #E2E8F0;
+  margin-bottom: 24rpx;
+}
+
+.child-profile-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.child-profile-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1A202C;
+}
+
+.child-profile-remove {
+  font-size: 24rpx;
+  color: #EF4444;
+}
+
+.child-profile-add {
+  min-height: 84rpx;
+  border-radius: 16rpx;
+  border: 2rpx dashed #93C5FD;
+  background: #F0F7FF;
+  color: #2563EB;
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* 性别选择 chips */
+.choice-row {
+  display: flex;
+  gap: 20rpx;
+  flex-wrap: wrap;
+}
+
+.choice-chip {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-height: 84rpx;
+  padding: 0 24rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid #DBEAFE;
+  background: #fff;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #1A202C;
+}
+
+.choice-chip.active {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+  color: #2563EB;
+}
+
+/* 带单位输入框 */
+.form-input-with-unit {
+  width: 100%;
+  min-height: 96rpx;
+  background: #fff;
+  border: 2rpx solid #E2E8F0;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.unit-value-input {
+  flex: 1;
+  height: 96rpx;
+  font-size: 30rpx;
+  color: #1A202C;
+}
+
+.input-unit {
+  flex-shrink: 0;
+  font-size: 28rpx;
+  color: #A0AEC0;
+}
+
+.empty-state {
+  text-align: center;
+  font-size: 28rpx;
+  color: #A0AEC0;
+  line-height: 1.7;
+  padding: 12rpx 0 24rpx;
+}
+
+/* 输入框统一样式 */
+.input,
+.textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 22rpx;
+  border-radius: 20rpx;
+  background: #F8FAFC;
+  padding: 32rpx 28rpx;
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: #1A202C;
+  overflow: hidden;
+  border: 2rpx solid #E2E8F0;
+}
+
+.input {
+  min-height: 96rpx;
+}
+
+.textarea {
+  min-height: 320rpx;
+}
+
+/* 按钮 */
+.primary-btn,
+.secondary-btn {
+  margin-top: 20rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
+}
+
+.secondary-btn {
+  background: #EBF2FF;
+  color: #2563EB;
+}
+
+/* 识别成功卡片 */
+.invite-success-card {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #F0FDF4;
+  border: 2rpx solid #86EFAC;
+}
+
+.invite-success-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.invite-success-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #16A34A;
+}
+
+.invite-success-tag {
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: #DCFCE7;
+  color: #16A34A;
+  font-size: 22rpx;
+}
+
+.invite-success-name {
+  margin-top: 16rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1A202C;
+}
+
+.invite-success-desc,
+.invite-success-code {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #4A5568;
+}
+
+/* 必填/选填标注 */
+.form-tips {
+  margin-top: 18rpx;
+  margin-bottom: 8rpx;
+  font-size: 24rpx;
+  color: #4A5568;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tips-required {
+  color: #EF4444;
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-right: 4rpx;
+  line-height: 1;
+}
+
+.tips-text {
+  color: #4A5568;
+}
+
+.tips-optional {
+  color: #A0AEC0;
+  font-size: 24rpx;
+  margin: 0 4rpx;
+}
+
+/* 二维码入口提示条 */
+.entry-context-tip {
+  margin-top: 16rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  background: #EBF2FF;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.entry-context-label {
+  font-size: 24rpx;
+  color: #4A5568;
+}
+
+.entry-context-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #2563EB;
+}
+
+/* 修改模式提示条 */
+.entry-context-tip.modify-tip {
+  background: #FFF7ED;
+}
+
+.entry-context-tip.modify-tip .entry-context-label {
+  color: #C2410C;
+}
+
+.entry-context-tip.modify-tip .entry-context-name {
+  color: #EA580C;
+}
+
+/* 顶部独立 label */
+.top-label {
+  margin-top: 22rpx;
+  margin-bottom: 14rpx;
+}
+
+.optional-tag {
+  color: #A0AEC0;
+  font-size: 24rpx;
+  font-weight: 400;
+  margin-left: 8rpx;
+}
+
+.required-inline-tip {
+  color: #EF4444;
+  font-weight: 600;
+}
+
+.required-inline-tip.tip-identified {
+  color: #16A34A;
+}
+
+/* 页面内 tabbar */
+.inner-tabbar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 8rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
+}
+
+.inner-tab {
+  flex: 1;
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  color: #64748B;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.inner-tab.active {
+  background: linear-gradient(90deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.25);
+}
+
+.inner-tab-label {
+  font-size: 28rpx;
+}
+
+.inner-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 12rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.35);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.inner-tab:not(.active) .inner-tab-count {
+  background: #EBF2FF;
+  color: #2563EB;
+}
+
+/* 课程码参课子 tabbar（current 内：表单提交 / 输入课程码） */
+.sub-tabbar {
+  display: flex;
+  align-items: center;
+  background: #F1F5F9;
+  border-radius: 999rpx;
+  padding: 8rpx;
+  margin-bottom: 24rpx;
+  box-sizing: border-box;
+}
+
+.sub-tab {
+  flex: 1;
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  color: #64748B;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sub-tab.active {
+  background: linear-gradient(90deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.25);
+}
+
+/* 新增（2026-10-16）：子 tabbar 语义提示条 —— 讲清「表单提交 / 输入课程码」两个子 tab 的含义与使用场景，
+   常驻展示、不随 subTab 切换变化。负 margin-top 用于收紧与上方 sub-tabbar 的间距 */
+.sub-tabbar-hint {
+  margin-top: -8rpx;
+  margin-bottom: 24rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 16rpx;
+  background: #F8FAFC;
+  border-left: 6rpx solid #93C5FD;
+  box-sizing: border-box;
+}
+
+.sub-tabbar-hint-line {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10rpx;
+}
+
+/* 第一行不加间距，保持提示条上下留白均匀 */
+.sub-tabbar-hint-line:first-child {
+  margin-top: 0;
+}
+
+.sub-tabbar-hint-key {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #2563EB;
+  margin-right: 12rpx;
+}
+
+.sub-tabbar-hint-text {
+  flex: 1;
+  font-size: 24rpx;
+  line-height: 34rpx;
+  color: #64748B;
+}
+
+/* 新建约课按钮 */
+.create-new-btn {
+  min-height: 88rpx;
+  margin-bottom: 24rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #3B82F6, #2563EB);
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(59, 130, 246, 0.3);
+  box-sizing: border-box;
+}
+
+.create-new-btn:active {
+  opacity: 0.85;
+}
+
+.history-loading,
+.history-empty {
+  margin-top: 18rpx;
+  padding: 32rpx 24rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #A0AEC0;
+  line-height: 1.7;
+  background: #F8FAFC;
+  border-radius: 18rpx;
+  border: 2rpx dashed #CBD5E1;
+}
+
+.history-empty .primary-btn {
+  margin-top: 24rpx;
+}
+
+.history-section-title {
+  margin: 16rpx 8rpx 12rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1A202C;
+}
+
+.history-item {
+  margin-top: 16rpx;
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #ffffff;
+  border: 2rpx solid #E2E8F0;
+  box-sizing: border-box;
+}
+
+.history-item-done {
+  background: #F8FAFC;
+  opacity: 0.92;
+}
+
+.history-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.history-item-title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A202C;
+  word-break: break-all;
+}
+
+.history-item-desc {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #4A5568;
+  line-height: 1.7;
+}
+
+.history-item-time {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #A0AEC0;
+}
+
+.history-item .action-row {
+  margin-top: 18rpx;
+  display: flex;
+  gap: 16rpx;
+}
+
+.history-item .action-row .primary-btn,
+.history-item .action-row .secondary-btn {
+  margin-top: 0;
+  flex: 1;
+}
+
+/* 状态徽章 */
+.status-badge {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ffffff;
+  margin-left: 6rpx;
+  flex-shrink: 0;
+}
+
+.status-gray { background: #94A3B8; }
+.status-orange { background: #F59E0B; }
+.status-green { background: #10B981; }
+.status-darkgreen { background: #047857; }
+.status-red { background: #EF4444; }
+.status-darkgray { background: #475569; }
+.status-blue { background: #3B82F6; }
+
+/* ===== 第一类：课程目标 —— 横向课程选择卡片 ===== */
+.class-scroll-view {
+  width: 100%;
+  white-space: nowrap;
+  padding-top: 10rpx;
+  padding-bottom: 30rpx;
+  box-sizing: border-box;
+}
+
+.class-card {
+  display: inline-flex;
+  flex-direction: column;
+  width: 600rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  margin-left: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.06);
+  border: 2rpx solid transparent;
+  overflow: hidden;
+  white-space: normal;
+  vertical-align: top;
+}
+
+.class-card.active {
+  border-color: #2563EB;
+  background-color: #EFF6FF;
+  box-shadow: 0 8rpx 24rpx rgba(37, 99, 235, 0.15);
+}
+
+.class-card-main {
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.class-icon {
+  width: 88rpx;
+  height: 88rpx;
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.class-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.class-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1A202C;
+  margin-bottom: 8rpx;
+}
+
+.class-desc {
+  font-size: 26rpx;
+  color: #64748B;
+  line-height: 1.4;
+}
+
+.class-check {
+  margin-left: 16rpx;
+}
+
+.class-sub-area {
+  padding: 24rpx;
+  background-color: #fff;
+  border-top: 1rpx solid rgba(15, 23, 42, 0.04);
+}
+
+.sub-tags-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.sub-tag {
+  padding: 12rpx 28rpx;
+  background-color: #F1F5F9;
+  color: #475569;
+  font-size: 26rpx;
+  border-radius: 32rpx;
+  border: 1rpx solid transparent;
+}
+
+.sub-tag.selected {
+  background-color: #EBF2FF;
+  color: #2563EB;
+  border-color: rgba(37, 99, 235, 0.3);
+  font-weight: 500;
+}
+
+.scroll-spacer {
+  width: 32rpx;
+  display: inline-block;
+}
+
+/* ===== 课程计划详情卡 ===== */
+.course-detail-card {
+  background: #FAFCFF;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 32rpx;
+}
+
+.group-inner-card {
+  margin-bottom: 32rpx;
+  border: 1rpx solid #E8F0FF;
+  box-shadow: none;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #E2E8F0;
+}
+
+.detail-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.detail-tag {
+  font-size: 24rpx;
+  color: #2563EB;
+  background: #EBF2FF;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.detail-content {
+  font-size: 28rpx;
+  color: #4A5568;
+  line-height: 1.6;
+  margin-bottom: 24rpx;
+  text-align: justify;
+}
+
+.detail-edit-textarea {
+  width: 100%;
+  min-height: 180rpx;
+  background: #fff;
+  border: 2rpx solid #DBEAFE;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #1A202C;
+  line-height: 1.6;
+}
+
+.detail-imgs {
+  white-space: nowrap;
+  height: 160rpx;
+}
+
+.detail-img {
+  width: 240rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-right: 16rpx;
+  background-color: #E2E8F0;
+}

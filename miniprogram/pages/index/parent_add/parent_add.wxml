@@ -1,0 +1,366 @@
+<view class="page">
+  <!-- 顶部加载占位 -->
+  <view class="card" wx:if="{{loading && !historyLoaded}}">
+    <view class="title">正在加载</view>
+    <view class="desc">正在读取家长资料与历史约课信息...</view>
+  </view>
+
+  <block wx:else>
+    <!-- 页面内部 tabbar：A 历史预约 / B 当前选择 -->
+    <view class="inner-tabbar">
+      <view
+        class="inner-tab {{activeTab === 'history' ? 'active' : ''}}"
+        data-tab="history"
+        bindtap="switchTab"
+      >
+        <view class="inner-tab-label"><view class="icon icon-history icon-sm"></view>历史预约</view>
+        <text class="inner-tab-count" wx:if="{{historyList.length > 0}}">{{historyList.length}}</text>
+      </view>
+      <view
+        class="inner-tab {{activeTab === 'current' ? 'active' : ''}}"
+        data-tab="current"
+        bindtap="switchTab"
+      >
+        <view class="inner-tab-label" wx:if="{{modifyCourseId}}"><view class="icon icon-edit icon-sm"></view>修改课程</view>
+        <view class="inner-tab-label" wx:else><view class="icon icon-plus icon-sm"></view>新建课程</view>
+      </view>
+    </view>
+
+    <!-- ========== A tabbar：历史预约（拉取家长的所有约课记录） ========== -->
+    <block wx:if="{{activeTab === 'history'}}">
+      <!-- 新建按钮：常驻 A 列表顶部，点击直接切到 B 新建模式 -->
+      <view class="create-new-btn" bindtap="goNewFromHistory"><view class="icon icon-plus icon-sm"></view>新建约课</view>
+      <view class="card">
+        <view class="title"><view class="icon icon-history icon-md"></view>历史预约</view>
+        <view class="desc">这里是您在本机构/教练名下提交过的所有约课记录。点击任意一条课节进入 B 进行编辑修改；也可以直接到 B 标签页新建一条新的约课。</view>
+
+        <view class="history-loading" wx:if="{{historyLoading}}">
+          <text>正在拉取历史记录...</text>
+        </view>
+
+        <view class="history-empty" wx:elif="{{historyList.length === 0}}">
+          <text>暂无历史预约记录，去 B 标签页新建您的第一条约课吧～</text>
+          <button class="primary-btn" bindtap="goNewFromHistory">去新建约课</button>
+        </view>
+
+        <block wx:else>
+          <!-- 活跃时间组：非终态课程（in_progress / editing / awaiting / pending 等） -->
+          <view class="history-section-title" wx:if="{{historyActive.length > 0}}"><view class="icon icon-refresh icon-sm"></view>进行中的课节（{{historyActive.length}}）</view>
+          <block wx:for="{{historyActive}}" wx:key="courseId">
+            <view class="history-item">
+              <view class="history-item-head">
+                <view class="history-item-title">
+                  {{item.targetSnapshot.displayName || item.inviteCode || '未命名课程'}}
+                </view>
+                <view class="status-badge status-{{item.statusClass}}">{{item.statusText || '待安排'}}</view>
+              </view>
+              <view class="history-item-desc">识别码：{{item.inviteCode || '未填写'}}</view>
+              <view class="history-item-desc">孩子姓名：{{item.formSnapshot.childName || '未填写'}}</view>
+              <view class="history-item-desc" wx:if="{{item.formSnapshot.location}}">上课地点：{{item.formSnapshot.location}}</view>
+              <view class="history-item-desc" wx:if="{{item.progressTotal}}">课时进度：{{item.progressDone || 0}} / {{item.progressTotal}}</view>
+              <view class="history-item-desc" wx:if="{{item.formSnapshot.frequency || ''}}">时间偏好：{{item.formSnapshot.frequency}}</view>
+              <view class="history-item-desc" wx:if="{{item.parentCourseCode}}">课程码：{{item.parentCourseCode}}</view>
+              <view class="history-item-time">更新于 {{item.updatedAtText || '时间未知'}}</view>
+              <view class="action-row">
+                <button class="primary-btn" data-course-id="{{item.courseId}}" bindtap="onSelectHistory">带这条去修改</button>
+              </view>
+            </view>
+          </block>
+
+          <!-- 终态组：completed / cancelled / closed / finished -->
+          <view class="history-section-title" wx:if="{{historyTerminal.length > 0}}"><view class="icon icon-check icon-sm"></view>已结束的课节（{{historyTerminal.length}}）</view>
+          <block wx:for="{{historyTerminal}}" wx:key="courseId">
+            <view class="history-item history-item-done">
+              <view class="history-item-head">
+                <view class="history-item-title">
+                  {{item.targetSnapshot.displayName || item.inviteCode || '未命名课程'}}
+                </view>
+                <view class="status-badge status-{{item.statusClass}}">{{item.statusText || '已结束'}}</view>
+              </view>
+              <view class="history-item-desc">识别码：{{item.inviteCode || '未填写'}}</view>
+              <view class="history-item-desc">孩子姓名：{{item.formSnapshot.childName || '未填写'}}</view>
+              <view class="history-item-desc" wx:if="{{item.closeSummary}}">结课摘要：{{item.closeSummary}}</view>
+              <view class="history-item-desc" wx:if="{{item.progressTotal}}">课时进度：{{item.progressDone || 0}} / {{item.progressTotal}}</view>
+              <view class="history-item-time">更新于 {{item.updatedAtText || '时间未知'}}</view>
+              <view class="action-row">
+                <button class="secondary-btn" data-course-id="{{item.courseId}}" bindtap="onSelectHistory">带这条去修改</button>
+              </view>
+            </view>
+          </block>
+        </block>
+      </view>
+    </block>
+
+    <!-- ========== B tabbar：当前选择（识别码 + 课程信息 + 孩子信息 + 补充信息） ========== -->
+    <block wx:if="{{activeTab === 'current'}}">
+      <!-- current 内子 tab：表单提交 / 输入课程码 -->
+      <view class="sub-tabbar">
+        <view class="sub-tab {{subTab === 'form' ? 'active' : ''}}" data-tab="form" bindtap="switchSubTab">
+          <view class="inner-tab-label"><view class="icon icon-edit icon-sm"></view>表单提交</view>
+        </view>
+        <view class="sub-tab {{subTab === 'code' ? 'active' : ''}}" data-tab="code" bindtap="switchSubTab">
+          <view class="inner-tab-label"><view class="icon icon-key icon-sm"></view>输入课程码</view>
+        </view>
+      </view>
+
+      <!-- 新增（2026-10-16）：子 tabbar 语义提示条 —— 常驻展示，一次性讲清「表单提交」「输入课程码」
+           两个子 tab 各自的含义与使用场景，避免家长混淆两个入口：
+           ① 表单提交：填写家长与孩子信息，向教练 / 机构发出约课需求（需先识别识别码）；
+           ② 输入课程码：教练已在教练端建好课程，家长直接输入教练提供的课程码即可加入课程。
+           与上方 organization.wxml「语义提示条」口径一致：只做解释，不改任何交互逻辑，也不随 subTab 切换变化 -->
+      <view class="sub-tabbar-hint">
+        <view class="sub-tabbar-hint-line">
+          <text class="sub-tabbar-hint-key">表单提交</text>
+          <text class="sub-tabbar-hint-text">填写家长与孩子信息，向教练 / 机构发出约课需求，提交前需先识别识别码。</text>
+        </view>
+        <view class="sub-tabbar-hint-line">
+          <text class="sub-tabbar-hint-key">输入课程码</text>
+          <text class="sub-tabbar-hint-text">教练已在教练端为您建好课程，直接输入教练提供的课程码即可加入课程。</text>
+        </view>
+      </view>
+
+      <!-- 子 tab 1：原来的表单提交 -->
+      <block wx:if="{{subTab === 'form'}}">
+      <view class="card">
+        <view class="title" wx:if="{{modifyCourseId}}"><view class="icon icon-edit icon-md"></view>修改当前课程</view>
+        <view class="title" wx:else><view class="icon icon-edit icon-md"></view>家长约课</view>
+        <view class="desc">
+          {{modifyCourseId ? '已选中历史课节，可以直接修改并覆写原信息。' : '先输入识别码，再填写家长与孩子信息。'}}
+        </view>
+        <!-- 必填/选填说明：标注红星为必填，灰色"选填"文字为选填 -->
+        <view class="form-tips">
+          <text class="tips-required">*</text>
+          <text class="tips-text">为必填项，</text>
+          <text class="tips-optional">（选填）</text>
+          <text class="tips-text">为选填项</text>
+        </view>
+
+        <!-- 二维码入口提示：从机构/教练小程序码扫码（或分享卡片）进入时展示，明确当前预约的入口来源；
+             仅做提示，真正的入口归因在提交订单时随 sourceEntryId 上报 -->
+        <view class="entry-context-tip" wx:if="{{entryContext.sourceEntryId}}">
+          <text class="entry-context-label">二维码入口：</text>
+          <text class="entry-context-name">{{entryContext.entryName || (entryContext.targetType === 'individual' ? '教练入口' : '机构入口')}}</text>
+        </view>
+
+        <!-- 修改模式提示：从 A 历史预约 / parent_classshow「修改」入口带 id 进入时展示，提交时按 id 覆写原约课记录 -->
+        <view class="entry-context-tip modify-tip" wx:if="{{isModify}}">
+          <text class="entry-context-label">修改模式：</text>
+          <text class="entry-context-name">本次提交将覆写原约课信息（courseId: {{modifyCourseId}}）</text>
+        </view>
+
+        <!-- 识别码（展示文案）：改为必填，必须先点"识别"按钮解析通过才能提交。底层字段仍为 form.inviteCode，避免影响后端字段 -->
+        <view class="form-label top-label required"><view class="icon icon-key icon-sm"></view>识别码</view>
+        <input class="input" placeholder="请输入识别码，必填" value="{{form.inviteCode}}" data-field="inviteCode" bindinput="onInput" />
+        <!-- 说明文字：识别码必须先解析成功才能提交约课表单，确保约课需求能落到正确的教练或机构名下 -->
+        <!-- 双态切换（已识别/未识别）：未识别时提示先输入识别码并点识别按钮；已识别后提示可重新识别以更换对象 -->
+        <view class="required-inline-tip" wx:if="{{!invitePreview}}">请先输入识别码，并点击右侧"识别"按钮确认后再提交。</view>
+        <view class="required-inline-tip tip-identified" wx:else>识别成功，如需更换对象请修改识别码后重新识别。</view>
+        <!-- 双态切换（已识别/未识别）：未识别时按钮文案为"识别"，已识别后改为"重新识别" -->
+        <button class="secondary-btn" loading="{{inviteLoading}}" bindtap="onResolveInvite">{{invitePreview ? '重新识别' : '识别'}}</button>
+
+        <!-- 识别成功后，直接在输入区下面展示结果卡片，让家长一眼确认当前会提交到哪个机构 / 教练。 -->
+        <view class="invite-success-card" wx:if="{{invitePreview}}">
+          <view class="invite-success-head">
+            <text class="invite-success-title">识别成功</text>
+            <text class="invite-success-tag">{{invitePreview.targetType === 'org' ? '机构' : '教练'}}</text>
+          </view>
+          <view class="invite-success-name">{{invitePreview.displayName}}</view>
+          <view class="invite-success-desc">{{invitePreview.description}}</view>
+          <view class="invite-success-code">识别码：{{invitePreview.inviteCode}}</view>
+        </view>
+      </view>
+
+      <view class="card migrated-card">
+        <view class="title">约课信息</view>
+        <view class="desc">下面这块直接沿用课程发布页里的"课程基本信息 + 孩子信息"结构，但只保留当前家长约课真正要填的部分。</view>
+
+        <view class="section-card create-group-card" wx:if="{{invitePreview}}">
+          <view class="section-card-title">已绑定对象</view>
+          <view class="highlight">{{invitePreview.displayName}}</view>
+          <view class="tag">
+            {{invitePreview.targetType === 'org' ? '机构模式' : '自由教练模式'}}
+          </view>
+          <view class="desc">{{invitePreview.description}}</view>
+        </view>
+
+        <!-- 第一类：课程目标（从 A 端 publish 创建班课程「课程目标」迁移，家长约课时一并选择课程方向） -->
+        <view class="section-card create-group-card">
+          <view class="section-card-title">第一类：课程目标</view>
+          <view class="group-subtitle">选课程方向，再填标题与课程计划。</view>
+
+          <scroll-view class="class-scroll-view" scroll-x="true" enable-flex="true">
+            <block wx:for="{{classTypes}}" wx:key="id">
+              <view class="class-card {{currentClassId === item.id ? 'active' : ''}}" bindtap="onSelectClass" data-id="{{item.id}}">
+                <view class="class-card-main">
+                  <view class="class-icon">{{item.name[0]}}</view>
+                  <view class="class-info">
+                    <text class="class-title">{{item.name}}</text>
+                    <text class="class-desc">{{item.brief}}</text>
+                  </view>
+                  <view class="class-check" wx:if="{{currentClassId === item.id}}">
+                    <icon type="success_no_circle" size="20" color="#2563EB"/>
+                  </view>
+                </view>
+                <view class="class-sub-area">
+                  <view class="sub-tags-wrapper">
+                    <block wx:if="{{item.subItems && item.subItems.length}}">
+                      <view class="sub-tag {{selectedSubName === sub && currentClassId === item.id ? 'selected' : ''}}" wx:for="{{item.subItems}}" wx:for-item="sub" wx:key="*this" catchtap="onSelectSubItem" data-parent-id="{{item.id}}" data-name="{{sub}}">{{sub}}</view>
+                    </block>
+                    <block wx:else>
+                      <view class="sub-tag selected">默认项目</view>
+                    </block>
+                  </view>
+                </view>
+              </view>
+            </block>
+            <view class="scroll-spacer"></view>
+          </scroll-view>
+
+          <view class="course-detail-card group-inner-card" wx:if="{{currentClass}}">
+            <view class="detail-header">
+              <text class="detail-title">课程计划</text>
+              <text class="detail-tag">{{currentClass.name}}</text>
+            </view>
+            <view class="detail-content">
+              <textarea class="detail-edit-textarea" placeholder="可以在默认课程计划基础上继续补充、更改" placeholder-class="input-placeholder" value="{{form.course_plan}}" data-field="course_plan" bindinput="onInput" auto-height></textarea>
+            </view>
+            <scroll-view class="detail-imgs" scroll-x="true">
+              <image class="detail-img" wx:for="{{currentClass.images}}" wx:key="*this" src="{{item}}" mode="aspectFill"></image>
+            </scroll-view>
+          </view>
+
+          <view class="form-group no-margin">
+            <view class="form-label">课程标题</view>
+            <input class="form-input" placeholder="例如 少儿体能启蒙班" placeholder-class="input-placeholder" value="{{form.title}}" data-field="title" bindinput="onInput"/>
+          </view>
+        </view>
+
+        <view class="section-card create-group-card">
+        <view class="section-card-title"><view class="icon icon-calendar icon-sm"></view>第二类：课程基本信息</view>
+          <view class="group-subtitle">这里填写上课时间、任务位置和联系方式。</view>
+
+          <!-- 上课时间：选填，方便教练安排时参考 -->
+          <view class="form-group">
+            <view class="form-label"><view class="icon icon-clock icon-sm"></view>上课时间<text class="optional-tag">（选填）</text></view>
+            <input class="form-input" placeholder="例如 每周二、四 19:00-20:00" placeholder-class="input-placeholder" value="{{form.frequency}}" data-field="frequency" bindinput="onInput"/>
+          </view>
+
+          <view class="form-group">
+            <view class="form-label required"><view class="icon icon-location icon-sm"></view>任务位置</view>
+            <view class="form-input-box" bindtap="chooseLocation">
+              <text class="{{form.location ? 'input-val' : 'input-placeholder'}}">{{form.location || '点击选择上课地点'}}</text>
+              <text class="input-icon">></text>
+            </view>
+          </view>
+
+          <view class="form-group no-margin">
+            <view class="form-label required"><view class="icon icon-phone icon-sm"></view>联系方式</view>
+            <input class="form-input" type="number" maxlength="11" placeholder="请输入11位手机号" placeholder-class="input-placeholder" value="{{form.contact}}" data-field="contact" bindinput="onInput"/>
+          </view>
+        </view>
+
+        <!-- 第三类：孩子信息（选填）：没有孩子信息也可直接提交约课，方便教练先联系家长确认 -->
+        <view class="section-card create-group-card">
+          <view class="section-card-title"><view class="icon icon-child icon-sm"></view>第三类：孩子信息<text class="optional-tag">（选填）</text></view>
+          <!-- 说明：孩子信息改为选填，不再强制至少添加一个孩子；每个孩子的具体字段依然为选填 -->
+          <view class="group-subtitle">这里记录孩子的基础信息，方便后续教练安排课程；如果暂时不清楚，也可以先不填，教练会与您再确认。现在一个约课单可以连续添加多个孩子，当前已添加 {{form.child_profiles.length || 0}} 个孩子。</view>
+
+          <block wx:for="{{form.child_profiles}}" wx:key="index">
+            <view class="child-profile-card">
+              <view class="child-profile-head">
+                <text class="child-profile-title">孩子{{index + 1}}</text>
+                <text class="child-profile-remove" data-index="{{index}}" bindtap="removeChildProfile">删除这个孩子</text>
+              </view>
+
+              <!-- 孩子昵称：选填 -->
+              <view class="form-group">
+              <view class="form-label"><view class="icon icon-child icon-sm"></view>孩子昵称<text class="optional-tag">（选填）</text></view>
+                <input class="form-input" placeholder="请输入孩子昵称" placeholder-class="input-placeholder" value="{{item.nickname}}" data-index="{{index}}" data-field="nickname" bindinput="onChildProfileInput"/>
+              </view>
+
+              <!-- 年龄：选填 -->
+              <view class="form-group">
+                <view class="form-label"><view class="icon icon-cake icon-sm"></view>年龄<text class="optional-tag">（选填）</text></view>
+                <input class="form-input" type="number" placeholder="请输入孩子年龄" placeholder-class="input-placeholder" value="{{item.age}}" data-index="{{index}}" data-field="age" bindinput="onChildProfileInput"/>
+              </view>
+
+              <!-- 性别：选填 -->
+              <view class="form-group">
+                <view class="form-label"><view class="icon icon-gender icon-sm"></view>性别<text class="optional-tag">（选填）</text></view>
+                <radio-group class="choice-row" data-index="{{index}}" bindchange="onChildGenderChange">
+                  <label class="choice-chip {{item.gender === '男' ? 'active' : ''}}">
+                    <radio value="男" checked="{{item.gender === '男'}}" color="#2563EB" />
+                    <text>男</text>
+                  </label>
+                  <label class="choice-chip {{item.gender === '女' ? 'active' : ''}}">
+                    <radio value="女" checked="{{item.gender === '女'}}" color="#2563EB" />
+                    <text>女</text>
+                  </label>
+                </radio-group>
+              </view>
+
+              <!-- 身高：选填 -->
+              <view class="form-group">
+                <view class="form-label"><view class="icon icon-ruler icon-sm"></view>身高<text class="optional-tag">（选填）</text></view>
+                <view class="form-input-with-unit">
+                  <input class="unit-value-input" type="digit" placeholder="请输入身高，例如 135" placeholder-class="input-placeholder" value="{{item.height}}" data-index="{{index}}" data-field="height" bindinput="onChildProfileInput"/>
+                  <text class="input-unit">cm</text>
+                </view>
+              </view>
+
+              <!-- 体重：选填 -->
+              <view class="form-group no-margin">
+                <view class="form-label"><view class="icon icon-weight icon-sm"></view>体重<text class="optional-tag">（选填）</text></view>
+                <view class="form-input-with-unit">
+                  <input class="unit-value-input" type="digit" placeholder="请输入体重，例如 32.5" placeholder-class="input-placeholder" value="{{item.weight}}" data-index="{{index}}" data-field="weight" bindinput="onChildProfileInput"/>
+                  <text class="input-unit">kg</text>
+                </view>
+              </view>
+            </view>
+          </block>
+
+          <view class="empty-state" wx:if="{{!form.child_profiles || form.child_profiles.length === 0}}">
+            <text>当前还没有添加孩子，点下面按钮开始录入。</text>
+          </view>
+
+          <view class="child-profile-add" bindtap="addChildProfile"><view class="icon icon-plus icon-sm"></view>再添加一个孩子</view>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="title"><view class="icon icon-note icon-md"></view>家长补充信息</view>
+        <!-- 家长尊称：选填，方便只留手机号也能先提交约课需求 -->
+        <view class="form-label top-label"><view class="icon icon-family icon-sm"></view>家长尊称<text class="optional-tag">（选填）</text></view>
+        <input class="input" placeholder="家长尊称" value="{{form.parentName}}" data-field="parentName" bindinput="onInput" />
+        <!-- 补充需求：选填 -->
+        <view class="form-label top-label"><view class="icon icon-note icon-sm"></view>补充需求<text class="optional-tag">（选填）</text></view>
+        <textarea class="textarea" placeholder="补充需求，例如上课时间、课程偏好、孩子基础情况" value="{{form.note}}" data-field="note" bindinput="onInput"></textarea>
+        <button class="primary-btn" loading="{{submitLoading}}" disabled="{{submitLoading}}" bindtap="onSubmit">
+          <block wx:if="{{modifyCourseId}}"><view class="icon icon-edit icon-sm"></view><text>修改约课信息</text></block>
+          <block wx:else><view class="icon icon-check icon-sm"></view><text>提交约课表单</text></block>
+        </button>
+      </view>
+      </block>
+
+      <!-- 子 tab 2：输入课程码参课 -->
+      <block wx:if="{{subTab === 'code'}}">
+        <view class="card">
+          <view class="title"><view class="icon icon-key icon-md"></view>课程码参课</view>
+          <view class="desc">如果您没有在家长端约课，教练已在教练端为您建好课程，可直接输入教练提供的课程码加入课程。</view>
+
+          <!-- 只需要课程码：家长姓名/手机号已移除，参课信息由教练端建课时确定 -->
+          <view class="form-label top-label required"><view class="icon icon-key icon-sm"></view>课程码</view>
+          <input
+            class="input"
+            placeholder="请输入课程码，例如 XING001a"
+            value="{{courseCodeInput}}"
+            bindinput="onCourseCodeInput"
+          />
+          <button class="primary-btn" loading="{{joinLoading}}" disabled="{{joinLoading}}" bindtap="onJoinCourseByCode">
+            <view class="icon icon-check icon-sm"></view><text>查询并参课</text>
+          </button>
+        </view>
+      </block>
+    </block>
+  </block>
+</view>

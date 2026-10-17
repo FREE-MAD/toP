@@ -1,0 +1,163 @@
+<!-- 入口二维码落地页：扫码后进入，展示机构信息，提供预约入口 -->
+<view class="entry-landing">
+  <!-- 加载中 -->
+  <view class="state-block" wx:if="{{state === 'loading'}}">
+    <view class="loading-dot"></view>
+    <view class="state-text">正在识别机构入口...</view>
+  </view>
+
+  <!-- 解析失败 -->
+  <view class="state-block" wx:elif="{{state === 'error'}}">
+    <view class="state-icon">!</view>
+    <view class="state-text">{{errorMessage}}</view>
+    <button class="btn btn-ghost" bindtap="onGoHome">返回首页</button>
+  </view>
+
+  <!-- 解析成功：展示完整机构信息（organization_show 完整机构展示，与 index_firstpage 同构） -->
+  <!-- 新增（落地页改版）：orgShow 有值走完整字段（轮播/简介/团队/课程），null 时降级用 snapshot 机构名+简介，其余默认值 -->
+  <view class="info-block" wx:else>
+    <view class="action-bar">
+      <!-- 新增（2026-10-16）：操作区改为「左按钮 + 右说明」的 3 行组合 —— 每行左边一个按钮，右边一句用途说明 -->
+      <view class="action-item">
+        <button class="btn btn-primary action-btn" bindtap="onGoBooking">我要预约</button>
+        <view class="action-desc">填写孩子约课信息，提交后由教练安排上课</view>
+      </view>
+      <view class="action-item">
+        <!-- 新增（2026-10-16）：查看课程入口，跳家长端「上课信息」tab（tabBar 页面，必须用 switchTab） -->
+        <button class="btn btn-ghost action-btn" bindtap="onGoClassShow">查看课程</button>
+        <view class="action-desc">查看孩子已约课程与教练排课进度</view>
+      </view>
+      <view class="action-item">
+        <button class="btn btn-ghost action-btn" bindtap="onGoHome">返回首页</button>
+        <view class="action-desc">回到家长约课首页</view>
+      </view>
+    </view>
+    <view class="organization_show">
+      <!-- 1. 顶部品牌 Hero：训练图片轮播 + 文字遮罩 + 轮播指示器 -->
+      <view class="os-hero">
+        <swiper
+          class="os-hero-swiper"
+          circular="{{brandHeroSlides.length > 1}}"
+          autoplay="{{brandHeroSlides.length > 1}}"
+          interval="4000"
+          duration="500"
+          indicator-dots="{{false}}"
+          bindchange="onBrandHeroChange"
+        >
+          <swiper-item wx:for="{{brandHeroSlides}}" wx:key="index">
+            <image
+              wx:if="{{item.imageUrl}}"
+              class="os-hero-image"
+              src="{{item.imageUrl}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              binderror="onBrandHeroImageError"
+            />
+            <view wx:else class="os-hero-image os-hero-placeholder">
+              <view class="os-hero-placeholder-text">训练现场图片</view>
+            </view>
+          </swiper-item>
+        </swiper>
+
+        <view class="os-hero-mask"></view>
+
+        <!-- 轮播指示器：只有多张图时才展示，指示点随当前页切换 -->
+        <view wx:if="{{brandHeroSlides.length > 1}}" class="os-hero-dots">
+          <block wx:for="{{brandHeroSlides}}" wx:key="index">
+            <view class="os-hero-dot {{brandHeroCurrent === index ? 'os-hero-dot-active' : ''}}"></view>
+          </block>
+        </view>
+
+        <view class="os-hero-text">
+          <view class="os-hero-title">{{organizationProfile.organizationName}}</view>
+          <view class="os-hero-subtitle">{{organizationProfile.slogan}}</view>
+        </view>
+      </view>
+
+      <!-- 2. 机构简介卡：4 行字段（核心服务 / 服务区域 / 适合谁 / 教练理念） -->
+      <view class="os-card os-intro-card">
+        <view class="os-card-head">
+          <view class="os-card-dot"></view>
+          <view class="os-card-title"><view class="icon icon-building icon-sm"></view>机构简介</view>
+          <view class="os-card-dot"></view>
+        </view>
+
+        <block wx:for="{{introInfoList}}" wx:key="label">
+          <view class="os-intro-row">
+            <view class="os-intro-bullet"></view>
+            <view class="os-intro-label">{{item.label}}</view>
+            <view class="os-intro-value">{{item.value}}</view>
+          </view>
+        </block>
+      </view>
+
+      <!-- 3. 团队成员：一人一行一个块；最多同时展示 5 人，超过 5 人时末尾出现「展开全部 / 收起」 -->
+      <view class="os-card os-team-card">
+        <view class="os-card-head">
+          <view class="os-card-dot"></view>
+          <view class="os-card-title"><view class="icon icon-team icon-sm"></view>团队成员</view>
+          <view class="os-card-dot"></view>
+        </view>
+
+        <view class="os-team-grid">
+          <block wx:for="{{teamMembers}}" wx:key="name" wx:for-index="teamIndex">
+            <view wx:if="{{teamShowAll || teamIndex < 5}}" class="os-team-item">
+              <view class="os-team-avatar">
+                <image
+                  wx:if="{{item.avatarUrl}}"
+                  class="os-team-avatar-image"
+                  src="{{item.avatarUrl}}"
+                  mode="aspectFill"
+                />
+                <text wx:else class="os-team-avatar-text">{{item.avatar || item.name}}</text>
+              </view>
+              <view class="os-team-info">
+                <view class="os-team-name">{{item.name}}</view>
+                <view class="os-team-role">{{item.role}}</view>
+              </view>
+            </view>
+          </block>
+
+          <!-- 成员超过 5 人时才出现折叠入口，点击切换全部展开 / 收起 -->
+          <view wx:if="{{teamMembers.length > 5}}" class="os-team-toggle" bindtap="onToggleTeamMembers">
+            <text class="os-team-toggle-text">{{teamShowAll ? '收起' : '展开全部'}}</text>
+            <text class="os-team-toggle-arrow {{teamShowAll ? 'os-team-toggle-arrow-up' : ''}}">▾</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 4. 机构课程：每门课一张卡（图片 + 课程名 + 授课时长 + 详情） -->
+      <view class="os-card os-course-card">
+        <view class="os-card-head">
+          <view class="os-card-dot"></view>
+          <view class="os-card-title"><view class="icon icon-book icon-sm"></view>机构课程</view>
+          <view class="os-card-dot"></view>
+        </view>
+
+        <view class="os-course-list">
+          <block wx:for="{{courseList}}" wx:key="name">
+            <view class="os-course-item">
+              <image
+                wx:if="{{item.imageUrl}}"
+                class="os-course-image"
+                src="{{item.imageUrl}}"
+                mode="aspectFill"
+              />
+              <view wx:else class="os-course-image os-course-image-placeholder">
+                <view class="os-course-placeholder-text">课程图片</view>
+              </view>
+              <view class="os-course-info">
+                <view class="os-course-name">{{item.name}}</view>
+                <view class="os-course-price">费用：{{item.price}}</view>
+                <view class="os-course-duration">授课时长：{{item.duration}}</view>
+                <view class="os-course-details">{{item.details}}</view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+   
+  </view>
+</view>

@@ -1,0 +1,97 @@
+<view class="page">
+  <view class="card" wx:if="{{loading}}">
+    <view class="title"><view class="icon icon-refresh icon-md"></view>正在加载</view>
+    <view class="desc">正在读取机构展示信息...</view>
+  </view>
+
+  <block wx:elif="{{!targetCard}}">
+    <view class="card">
+      <view class="title"><view class="icon icon-building icon-md"></view>机构展示</view>
+      <view class="desc">当前默认空。等家长完成约课填写并绑定识别码后，这里再显示对应机构 / 自由教练信息。</view>
+      <button class="primary-btn" bindtap="goParentAdd">去填写约课表单</button>
+    </view>
+  </block>
+
+  <block wx:else>
+    <!-- 区块一：品牌区（logo + 品牌名 + 一句品牌定位 + 机构/自由教练标签） -->
+    <view class="brand-card">
+      <image
+        wx:if="{{brand.logoFileId}}"
+        class="brand-logo"
+        src="{{brand.logoFileId}}"
+        mode="aspectFill"
+      ></image>
+      <view wx:else class="brand-logo brand-logo-placeholder"></view>
+      <view class="brand-main">
+        <view class="brand-name-row">
+          <view class="brand-name">{{brand.name || targetCard.displayName}}</view>
+          <view class="brand-tag">{{brand.tagText}}</view>
+        </view>
+        <!-- 一句品牌定位：A 侧机构资料推送 brand_slogan 后展示，未推送时整行隐藏 -->
+        <view class="brand-slogan" wx:if="{{brand.slogan}}">{{brand.slogan}}</view>
+      </view>
+    </view>
+
+    <!-- 区块二：品牌轮播图（A 侧推送、已转存 B 侧云存储的图片；无图时固定空白态） -->
+    <view class="card swiper-card">
+      <swiper
+        wx:if="{{swiperImages.length}}"
+        class="brand-swiper"
+        indicator-dots="true"
+        circular="true"
+        autoplay="true"
+        interval="4000"
+        indicator-color="rgba(255,255,255,0.45)"
+        indicator-active-color="#ffffff"
+      >
+        <block wx:for="{{swiperImages}}" wx:key="index">
+          <swiper-item>
+            <image class="brand-swiper-image" src="{{item}}" mode="aspectFill"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+
+      <view class="brand-swiper-empty" wx:else>
+        <view class="brand-swiper-empty-title">品牌图片暂未上传</view>
+        <view class="brand-swiper-empty-desc">机构上传品牌轮播图后，这里会自动展示。</view>
+      </view>
+    </view>
+
+    <!-- 区块三：基本信息（机构简介 / 核心服务 / 服务区域 / 适合谁 / 教练理念 + 城市地址联系人，空值行整行隐藏） -->
+    <view class="card" wx:if="{{infoRows.length}}">
+      <view class="section-title"><view class="icon icon-list icon-sm"></view>基本信息</view>
+      <view class="info-row" wx:for="{{infoRows}}" wx:key="label">
+        <text class="info-label">{{item.label}}</text>
+        <text class="info-value">{{item.value}}</text>
+      </view>
+    </view>
+
+    <!-- 区块四：教练信息（机构成员一行一位：头像 + 昵称 + 角色；自由教练降级展示对接教练） -->
+    <view class="card" wx:if="{{coaches.length}}">
+      <view class="section-title"><view class="icon icon-team icon-sm"></view>教练信息</view>
+      <view class="coach-list">
+        <view class="coach-item" wx:for="{{coaches}}" wx:key="index">
+          <image
+            wx:if="{{item.avatarFileId}}"
+            class="coach-avatar"
+            src="{{item.avatarFileId}}"
+            mode="aspectFill"
+          ></image>
+          <view wx:else class="coach-avatar coach-avatar-placeholder"></view>
+          <view class="coach-main">
+            <view class="coach-name">{{item.name}}</view>
+            <view class="coach-role">{{item.roleText}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 家长自己的约课提交状态（非机构展示内容，保留在页面底部） -->
+    <view class="card" wx:if="{{latestRequest}}">
+      <view class="title"><view class="icon icon-edit icon-md"></view>家长提交信息</view>
+      <view class="desc">家长姓名：{{latestRequest.formSnapshot.parentName || '未填写'}}</view>
+      <view class="desc">孩子姓名：{{latestRequest.formSnapshot.childName || '未填写'}}</view>
+      <view class="desc">当前状态：{{latestRequest.statusText || '待安排'}}</view>
+    </view>
+  </block>
+</view>

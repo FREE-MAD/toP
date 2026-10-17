@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/index_firstpage/index_firstpage",
+    "pages/index/parent_add/parent_add",
+    "pages/index/parent_classshow/parent_classshow",
+    "pages/index/organization_show/organization_show",
+    "pages/entry_landing/entry_landing",
+    "pages/task/progress/progress_specialOperation/progress_specialOperation",
+    "pages/task/progress/progress_specialOperation/progress_classdetailed/progress_classdetailed",
+    "pages/parent/mine/mine"
+  ],
+  "tabBar": {
+    "color": "#94A3B8",
+    "selectedColor": "#2563EB",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index_firstpage/index_firstpage",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/index/parent_add/parent_add",
+        "text": "约课",
+        "iconPath": "images/tab/add.png",
+        "selectedIconPath": "images/tab/add-active.png"
+      },
+      {
+        "pagePath": "pages/index/parent_classshow/parent_classshow",
+        "text": "上课信息",
+        "iconPath": "images/tab/class.png",
+        "selectedIconPath": "images/tab/class-active.png"
+      },
+      {
+        "pagePath": "pages/parent/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tab/mine.png",
+        "selectedIconPath": "images/tab/mine-active.png"
+      }
+    ]
+  },
+  "window": {
+    "backgroundColor": "#F0F4F8",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "家长约课",
+    "navigationBarTextStyle": "black"
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于让家长选择上课地点"
+    }
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}
